@@ -12,10 +12,6 @@ def save_inf():
                       "Version: " + platform.version(),
                       "Processor: " + platform.processor()])
 
-    # Write info to file
-    with open("sys.tat", "w+") as file:
-        file.writelines(info)
-
     # Create socket to send data
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(("", 9090))

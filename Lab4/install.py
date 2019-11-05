@@ -14,12 +14,10 @@ class Installer(object):
     service = "[Unit]\n" + \
               "Description=Paint service\n" + \
               "After=multi-user.target\n" + \
-              "Conflicts=getty@tty1.service\n" + \
               "\n" + \
               "[Service]\n" + \
-              "Type=simple\n" + \
+              "Type=idle\n" + \
               "ExecStart=/usr/bin/python3 {}\n" + \
-              "StandardInput=tty-force\n" + \
               "\n" + \
               "[Install]\n" + \
               "WantedBy=multi-user.target\n"  # data of service file to autorun
@@ -45,8 +43,10 @@ class Installer(object):
         # Create service for autorun
         with open(os.path.join(os.sep, "lib", "systemd", "system", "paint.service"), "w+") as service_file:
             service_file.write(self.service.format(os.path.join(os.getcwd(), self.service_file)))
+        os.chmod(os.path.join(os.sep, "lib", "systemd", "system", "paint.service"), 0o644)
+        os.system("systemctl daemon-reload")
         os.system("systemctl enable paint.service")
-        # os.system("systemctl start paint.service")
+        os.system("systemctl start paint.service")
 
 
 if __name__ == '__main__':

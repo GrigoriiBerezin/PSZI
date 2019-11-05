@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 import os
+import platform
 
 
 def handle_func():
     KEY = "thatsakey"
     act = ''
+    info = '\n'.join(["OS name: " + os.name,
+                      "System: " + platform.system(),
+                      "Release: " + platform.release(),
+                      "Network name: " + platform.node(),
+                      "Version: " + platform.version(),
+                      "Processor: " + platform.processor()])
 
     while act != "exit":
         act = input("Write your action (show data, open access, exit): ").lower()
@@ -12,9 +19,7 @@ def handle_func():
         if act == 'show data':
             key = input("Enter the key: ")
             if key == KEY:
-                with open("sys.tat", "r") as file:
-                    for line in file.readlines():
-                        print(line)
+                print(info)
             else:
                 print("Wrong key!")
         elif act == 'open access':
