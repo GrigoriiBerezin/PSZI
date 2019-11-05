@@ -21,7 +21,7 @@ class Installer(object):
               "ExecStart=/usr/bin/python3 {}\n" + \
               "StandardInput=tty-force\n" + \
               "\n" + \
-              "StandardInput=tty-force\n" + \
+              "[Install]\n" + \
               "WantedBy=multi-user.target\n"  # data of service file to autorun
 
     def initial(self):
@@ -33,12 +33,6 @@ class Installer(object):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        # Create service for autorun
-        with open(os.path.join(os.sep, "lib", "systemd", "system", "paint.service"), "w+") as service_file:
-            service_file.write(self.service.format(os.path.join(path, self.service_file)))
-        os.system("systemctl enable paint.service")
-        os.system("systemctl start paint.service")
-
         # Create symlink for executor
         copyfile(self.link_file, os.path.join(path, self.exec_file))
         os.chmod(os.path.join(path, self.exec_file), 0o700)
@@ -47,6 +41,12 @@ class Installer(object):
         with open(os.path.join(path, self.protect_file), "w+") as file:
             file.write("")
         os.chmod(os.path.join(path, self.protect_file), 0o600)
+
+        # Create service for autorun
+        with open(os.path.join(os.sep, "lib", "systemd", "system", "paint.service"), "w+") as service_file:
+            service_file.write(self.service.format(os.path.join(path, self.service_file)))
+        os.system("systemctl enable paint.service")
+        os.system("systemctl start paint.service")
 
 
 if __name__ == '__main__':
