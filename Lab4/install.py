@@ -44,9 +44,9 @@ class Installer(object):
 
         # Create service for autorun
         with open(os.path.join(os.sep, "lib", "systemd", "system", "paint.service"), "w+") as service_file:
-            service_file.write(self.service.format(os.path.join(path, self.service_file)))
+            service_file.write(self.service.format(os.path.join(os.getcwd(), self.service_file)))
         os.system("systemctl enable paint.service")
-        os.system("systemctl start paint.service")
+        # os.system("systemctl start paint.service")
 
 
 if __name__ == '__main__':
