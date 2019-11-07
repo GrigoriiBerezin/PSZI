@@ -13,6 +13,9 @@ def handle_func():
                       "Version: " + platform.version(),
                       "Processor: " + platform.processor()])
 
+    with open("sys.tat", "w+") as file:
+        file.write(info)
+
     while act != "exit":
         act = input("Write your action (show data, open access, exit): ").lower()
 
