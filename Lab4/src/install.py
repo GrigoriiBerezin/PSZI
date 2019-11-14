@@ -10,6 +10,7 @@ from tkinter import filedialog as fd
 # Сделать инициализацию бд тут
 class Installer(tk.Frame):
     COUNTER = 4
+    TIME = 60
 
     install_button = None
     choose_button = None
@@ -53,6 +54,7 @@ class Installer(tk.Frame):
             open_key = winreg.OpenKey(reg, "Software", 0, winreg.KEY_WRITE)
             open_key = winreg.CreateKeyEx(open_key, "Lab3")
             winreg.SetValue(open_key, "Counter", winreg.REG_SZ, str(self.COUNTER))
+            winreg.SetValue(open_key, "Timer", winreg.REG_SZ, str(self.TIME))
         except PermissionError:
             print("You don't have permission to do this")
             return -1

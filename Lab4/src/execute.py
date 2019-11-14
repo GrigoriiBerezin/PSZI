@@ -18,6 +18,7 @@ class Handler(tk.Frame):
     activate = None
     count = None
     count_label = None
+    timer_label = None
 
     PATTERN = "INSERT INTO name(name) VALUES (?)"
 
@@ -25,8 +26,10 @@ class Handler(tk.Frame):
         super().__init__(master)
         self.name = tk.StringVar()
         self.count = tk.IntVar()
+        self.timer = tk.IntVar()
         self.check()
         self.create_widgets()
+        self.time_handle()
         self.pack()
 
     def create_widgets(self):
@@ -42,7 +45,12 @@ class Handler(tk.Frame):
         self.activate.grid(row=2, column=0, pady=2)
 
         self.count_label = tk.Label(self, textvariable=self.count)
-        self.count_label.grid(row=3, column=0, pady=2, sticky=tk.W)
+        self.count_label.grid(row=3, column=0, sticky=tk.W)
+
+        self.timer_label = tk.Label(self, textvariable=self.timer)
+        self.timer_label.grid(row=3, column=1, sticky=tk.E)
+
+        self.timer.set(winreg.QueryValue(self.reg, "Timer"))
 
     def handle(self):
         try:
@@ -57,11 +65,20 @@ class Handler(tk.Frame):
         self.check()
 
     def check(self):
-        self.count.set(winreg.QueryValue(self.reg, "Counter")[0])
+        self.count.set(winreg.QueryValue(self.reg, "Counter"))
 
         if self.count.get() == 0:
             messagebox.showerror("Trial version is end, buy full version")
             self.master.destroy()
+
+    def time_handle(self):
+        if self.timer.get() <= 0:
+            self.master.destroy()
+        else:
+            self.after(1000, self.time_handle)
+
+        self.timer.set(self.timer.get() - 1)
+        winreg.SetValue(self.reg, "Timer", winreg.REG_SZ, str(self.timer.get()))
 
 
 if __name__ == '__main__':
